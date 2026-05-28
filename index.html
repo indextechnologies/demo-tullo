@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TULLO | Barbería & Salón — Ñemby, Paraguay</title>
+  <meta name="description" content="Barbería Tullo — Cortes masculinos y femeninos de primer nivel en Ñemby, Paraguay. Reservá tu turno por WhatsApp." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:#080808;--bg2:#0D0D0D;--surface:#141414;--surface2:#1C1C1C;
+      --gold:#C9A84C;--gold-lt:#E2C87A;--gold-dk:#9E7D2A;
+      --rose:#C4917A;--rose-lt:#DDB9A8;--rose-dk:#9A6855;
+      --text:#F2EDE4;--text2:#CFC8BA;--muted:#787068;
+      --border:#242424;--border-lt:#303030;--wa:#25D366;
+      --fd:'Cinzel',Georgia,serif;--fs:'Cormorant Garamond',Georgia,serif;--fn:'Raleway',system-ui,sans-serif;
+      --max:1140px;--shadow:0 8px 48px rgba(0,0,0,.7);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:var(--fn);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}img{display:block;max-width:100%}ul{list-style:none}button{cursor:pointer;border:none;background:none;font:inherit}
+
+    /* LOADER */
+    #loader{position:fixed;inset:0;z-index:9999;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.3rem}
+    #loader.hide{animation:loaderOut .95s cubic-bezier(.76,0,.24,1) .2s forwards}
+    @keyframes loaderOut{to{transform:translateY(-100%)}}
+    .ldr-crown{width:58px;margin-bottom:.6rem;opacity:0;animation:fu .7s ease .2s forwards}
+    .ldr-sub{font-family:var(--fd);font-size:.48rem;letter-spacing:.6em;text-transform:uppercase;color:rgba(242,237,228,.2);opacity:0;animation:fu .6s ease .65s forwards}
+    .ldr-name{font-family:var(--fd);font-size:3.8rem;letter-spacing:.2em;color:transparent;-webkit-text-stroke:1px rgba(201,168,76,.3);line-height:1;text-transform:uppercase;opacity:0;animation:nameIn .9s cubic-bezier(.34,1.2,.64,1) .4s forwards;position:relative}
+    .ldr-name::after{content:attr(data-text);position:absolute;inset:0;background:linear-gradient(135deg,var(--gold-dk),var(--gold),var(--gold-lt),var(--rose-lt),var(--rose));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:0;clip-path:inset(100% 0 0 0);animation:cr .85s cubic-bezier(.4,0,.2,1) 1s forwards}
+    .ldr-place{font-family:var(--fs);font-size:.82rem;letter-spacing:.25em;font-style:italic;color:rgba(196,145,122,.35);opacity:0;animation:fu .5s ease 1.2s forwards}
+    .ldr-track{margin-top:1.8rem;width:100px;height:1px;background:rgba(201,168,76,.1);overflow:hidden;opacity:0;animation:fu .4s ease 1.4s forwards}
+    .ldr-fill{height:100%;width:0;background:linear-gradient(90deg,var(--gold-dk),var(--gold),var(--rose),var(--rose-lt));animation:bf .9s ease 1.5s forwards}
+    @keyframes nameIn{to{opacity:1}}@keyframes cr{to{clip-path:inset(0% 0 0 0)}}
+    @keyframes bf{to{width:100%}}@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+    /* CANVAS */
+    #pc{position:fixed;inset:0;pointer-events:none;z-index:0}
+
+    /* UTILS */
+    .container{width:90%;max-width:var(--max);margin-inline:auto}
+    .tag{display:inline-block;font-family:var(--fd);font-size:.52rem;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,.3);border-radius:2px;padding:.28rem 1rem;margin-bottom:1.1rem}
+    .tag-r{color:var(--rose);border-color:rgba(196,145,122,.3)}
+    .sec-title{font-family:var(--fd);font-size:clamp(1.8rem,4vw,2.8rem);line-height:1.08;color:var(--text);margin-bottom:.5rem;letter-spacing:.04em;text-transform:uppercase}
+    .sec-title em{font-family:var(--fs);font-style:italic;color:var(--gold);text-transform:none}
+    .sec-title em.r{color:var(--rose)}
+    .sec-sub{color:var(--muted);font-size:.88rem;line-height:1.78;max-width:500px;font-weight:300}
+    .divider{width:36px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin:1rem 0 2.2rem}
+    .divider-r{background:linear-gradient(90deg,var(--rose),transparent)}
+
+    .btn{display:inline-flex;align-items:center;gap:.55rem;padding:.85rem 1.9rem;border-radius:2px;font-weight:600;font-size:.78rem;letter-spacing:.08em;transition:all .25s ease;text-transform:uppercase;font-family:var(--fd)}
+    .btn-gold{background:var(--gold);color:#000;box-shadow:0 4px 24px rgba(201,168,76,.22)}
+    .btn-gold:hover{background:var(--gold-lt);transform:translateY(-2px);box-shadow:0 8px 36px rgba(201,168,76,.4)}
+    .btn-rose{background:var(--rose);color:#fff;box-shadow:0 4px 24px rgba(196,145,122,.22)}
+    .btn-rose:hover{background:var(--rose-lt);transform:translateY(-2px)}
+    .btn-og{border:1px solid rgba(201,168,76,.35);color:var(--gold)}
+    .btn-og:hover{background:rgba(201,168,76,.06);border-color:var(--gold)}
+    .btn-or{border:1px solid rgba(196,145,122,.35);color:var(--rose)}
+    .btn-or:hover{background:rgba(196,145,122,.06);border-color:var(--rose)}
+    .btn-wa{background:var(--wa);color:#fff;box-shadow:0 4px 22px rgba(37,211,102,.18)}
+    .btn-wa:hover{filter:brightness(1.12);transform:translateY(-2px)}
+    .btn-ghost{border:1px solid var(--border-lt);color:var(--muted)}
+    .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+
+    /* NAV */
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.4rem 0;transition:background .35s,padding .3s}
+    .navbar.scrolled{background:rgba(8,8,8,.96);backdrop-filter:blur(20px);padding:.9rem 0;border-bottom:1px solid var(--border)}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{display:flex;flex-direction:column;align-items:flex-start;gap:.15rem}
+    .nav-logo svg{width:24px}
+    .nav-logo-name{font-family:var(--fd);font-size:1.35rem;letter-spacing:.22em;background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:.9}
+    .nav-logo-sub{font-family:var(--fd);font-size:.36rem;letter-spacing:.5em;text-transform:uppercase;color:rgba(242,237,228,.25)}
+    .nav-links{display:flex;gap:2.2rem;font-family:var(--fd);font-size:.58rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+    .nav-links a{color:rgba(242,237,228,.5);transition:color .2s}
+    .nav-links a:hover{color:var(--gold)}
+    @media(max-width:767px){.nav-links{display:none}}
+    .nav-cta{display:none}@media(min-width:640px){.nav-cta{display:inline-flex}}
+    .hamburger{display:flex;flex-direction:column;gap:5px;padding:.4rem}
+    .hamburger span{display:block;width:22px;height:1.5px;background:var(--text);border-radius:2px;transition:all .3s}
+    .hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+    .hamburger.open span:nth-child(2){opacity:0;width:0}
+    .hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+    @media(min-width:768px){.hamburger{display:none}}
+    .mobile-menu{display:none;position:fixed;inset:0;background:#000;z-index:199;flex-direction:column;align-items:center;justify-content:center;gap:2.8rem}
+    .mobile-menu.open{display:flex}
+    .mobile-menu a{font-family:var(--fd);font-size:1.8rem;letter-spacing:.12em;color:var(--text);transition:color .2s;text-transform:uppercase}
+    .mobile-menu a:hover{color:var(--gold)}
+
+    /* HERO SPLIT */
+    .hero{position:relative;min-height:100svh;display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
+    @media(max-width:767px){.hero{grid-template-columns:1fr;grid-template-rows:1fr 1fr}}
+    .hero-half{position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:8rem 3.5rem 5.5rem;overflow:hidden}
+    @media(max-width:767px){.hero-half{padding:5.5rem 1.5rem 3.5rem;min-height:50svh}}
+    .hero-half--m{background:linear-gradient(to right,rgba(0,0,0,.9),rgba(0,0,0,.55)),linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 55%),url('https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=900&q=80') center/cover no-repeat}
+    .hero-half--f{background:linear-gradient(to left,rgba(0,0,0,.9),rgba(0,0,0,.55)),linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 55%),url('https://images.unsplash.com/photo-1560066984-138dadb4c035?w=900&q=80') center/cover no-repeat}
+    .hero-grain{position:absolute;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px;pointer-events:none;z-index:1}
+
+    /* Center divider + logo */
+    .hero-divider{position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(242,237,228,.12),transparent);z-index:3;pointer-events:none}
+    @media(max-width:767px){.hero-divider{display:none}}
+    .hero-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:5;text-align:center;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:.4rem}
+    .hero-center svg{width:52px;filter:drop-shadow(0 0 20px rgba(201,168,76,.25))}
+    .hero-center-name{font-family:var(--fd);font-size:3.5rem;letter-spacing:.25em;background:linear-gradient(180deg,var(--gold-lt),var(--gold) 40%,var(--rose));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1;text-transform:uppercase;text-shadow:none}
+    @media(max-width:767px){.hero-center{display:none}}
+
+    /* Mobile only logo at top */
+    .hero-m-logo{display:none;position:absolute;top:1.5rem;left:50%;transform:translateX(-50%);z-index:5;text-align:center;align-items:center;flex-direction:column;gap:.2rem}
+    .hero-m-logo svg{width:26px}
+    .hero-m-logo-name{font-family:var(--fd);font-size:1.4rem;letter-spacing:.22em;background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;background-clip:text;color:transparent;text-transform:uppercase;line-height:1}
+    @media(max-width:767px){.hero-m-logo{display:flex}}
+
+    .hero-label{font-family:var(--fd);font-size:.5rem;letter-spacing:.4em;text-transform:uppercase;font-weight:600;margin-bottom:1.2rem;display:flex;align-items:center;gap:.9rem;position:relative;z-index:2;opacity:0;animation:fu .7s ease .8s forwards}
+    .hero-half--m .hero-label{color:var(--gold)}.hero-half--m .hero-label::before{content:'';display:block;width:20px;height:1px;background:var(--gold)}
+    .hero-half--f .hero-label{color:var(--rose)}.hero-half--f .hero-label::before{content:'';display:block;width:20px;height:1px;background:var(--rose)}
+    .hero-title{font-family:var(--fd);font-size:clamp(2rem,4vw,3.5rem);line-height:.95;letter-spacing:.04em;text-transform:uppercase;color:var(--text);margin-bottom:1rem;position:relative;z-index:2}
+    .hero-half--f .hero-title{font-family:var(--fs);font-weight:300;letter-spacing:.05em;font-size:clamp(2rem,4vw,3.8rem)}
+    .hero-half--m .hero-title .g{color:var(--gold);font-style:italic;font-family:var(--fs)}
+    .hero-half--f .hero-title .r{color:var(--rose);font-style:italic}
+    .hero-desc{font-size:.82rem;line-height:1.8;font-weight:300;max-width:270px;margin-bottom:2rem;position:relative;z-index:2;opacity:0;animation:fu .7s ease 1s forwards}
+    .hero-half--m .hero-desc{color:rgba(242,237,228,.6);border-left:1px solid rgba(201,168,76,.28);padding-left:1rem}
+    .hero-half--f .hero-desc{color:rgba(242,237,228,.6);border-left:1px solid rgba(196,145,122,.28);padding-left:1rem}
+    .hero-actions{display:flex;gap:.8rem;flex-wrap:wrap;position:relative;z-index:2;opacity:0;animation:fu .7s ease 1.15s forwards}
+
+    /* MARQUEE */
+    .mq-wrap{overflow:hidden;padding:.72rem 0;position:relative}
+    .mq-wrap::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,var(--gold-dk),var(--gold) 30%,var(--rose) 70%,var(--rose-dk))}
+    .mq-track{display:flex;animation:mqScroll 26s linear infinite;white-space:nowrap;position:relative;z-index:1}
+    .mq-item{font-family:var(--fd);font-size:.72rem;letter-spacing:.22em;color:rgba(0,0,0,.7);padding:0 2.8rem;display:flex;align-items:center;gap:2.8rem;text-transform:uppercase;font-weight:600}
+    .mq-item::after{content:'✦';font-size:.44rem;color:rgba(0,0,0,.4)}
+    @keyframes mqScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+    /* STATS */
+    .stats-bar{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .stats-inner{display:grid;grid-template-columns:repeat(4,1fr);text-align:center}
+    @media(max-width:600px){.stats-inner{grid-template-columns:repeat(2,1fr)}}
+    .stat{padding:1.8rem 1rem;border-right:1px solid var(--border);position:relative;overflow:hidden}
+    .stat:last-child{border-right:none}
+    .stat::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:2px;transition:width .4s ease}
+    .stat:hover::after{width:60%}
+    .sg::after{background:var(--gold)}.sr::after{background:var(--rose)}
+    .stat-num{font-family:var(--fd);font-size:1.8rem;letter-spacing:.06em;line-height:1}
+    .sg .stat-num{color:var(--gold)}.sr .stat-num{color:var(--rose)}
+    .stat-label{font-family:var(--fd);font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:.4rem}
+
+    /* DUAL SERVICES */
+    .services{padding:7rem 0}
+    .services-hd{text-align:center;margin-bottom:4rem}
+    .dual-split{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:2px;overflow:hidden}
+    @media(max-width:767px){.dual-split{grid-template-columns:1fr}}
+    .dual-col{background:var(--surface)}
+    .dcol-hd{padding:2rem 2rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem}
+    .dcol-icon{width:44px;height:44px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.1rem}
+    .dm .dcol-icon{background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.2);color:var(--gold)}
+    .df .dcol-icon{background:rgba(196,145,122,.07);border:1px solid rgba(196,145,122,.2);color:var(--rose)}
+    .dcol-hd h3{font-family:var(--fd);font-size:.82rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text)}
+    .dcol-hd p{font-size:.72rem;color:var(--muted);margin-top:.2rem;font-weight:300}
+
+    .svc-item{display:flex;align-items:flex-start;gap:1.2rem;padding:1.4rem 2rem;border-bottom:1px solid var(--border);transition:background .2s;position:relative;overflow:hidden}
+    .svc-item:last-child{border-bottom:none}
+    .svc-item:hover{background:var(--surface2)}
+    .svc-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;transform:scaleY(0);transition:transform .3s ease}
+    .dm .svc-item::before{background:var(--gold)}.df .svc-item::before{background:var(--rose)}
+    .svc-item:hover::before{transform:scaleY(1)}
+    .svc-n{font-family:var(--fd);font-size:.55rem;letter-spacing:.06em;margin-top:.25rem;min-width:18px}
+    .dm .svc-n{color:rgba(201,168,76,.35)}.df .svc-n{color:rgba(196,145,122,.35)}
+    .svc-b{flex:1}
+    .svc-name{font-family:var(--fd);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text);margin-bottom:.3rem}
+    .df .svc-name{font-family:var(--fs);font-size:.92rem;letter-spacing:.03em;text-transform:none;font-style:italic;font-weight:400}
+    .svc-desc{font-size:.78rem;color:var(--muted);line-height:1.65;font-weight:300}
+    .svc-badge{font-family:var(--fd);font-size:.42rem;letter-spacing:.18em;text-transform:uppercase;padding:.18rem .55rem;border-radius:2px;margin-left:auto;align-self:flex-start;white-space:nowrap;flex-shrink:0}
+    .dm .svc-badge{background:var(--gold);color:#000}.df .svc-badge{background:var(--rose);color:#fff}
+
+    /* CTA BAND */
+    .cta-band{padding:5.5rem 0;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+    .cta-band::before{content:'TULLO';position:absolute;right:-1rem;top:50%;transform:translateY(-50%);font-family:var(--fd);font-size:13rem;color:rgba(201,168,76,.015);line-height:1;pointer-events:none;user-select:none;letter-spacing:.08em}
+    .cta-inner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:2.5rem}
+    .cta-text{font-family:var(--fs);font-size:clamp(1.6rem,3.5vw,2.6rem);line-height:1.2;font-weight:300}
+    .cta-text strong{font-weight:400;color:var(--gold)}.cta-text em{font-style:italic;color:var(--rose)}
+    .cta-acts{display:flex;flex-wrap:wrap;gap:1rem}
+
+    /* GALLERY */
+    .gallery{padding:7rem 0;background:var(--bg2)}
+    .gal-hd{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1.5rem;margin-bottom:2.5rem}
+    .gal-grid{display:grid;gap:4px;grid-template-columns:repeat(2,1fr)}
+    @media(min-width:600px){.gal-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(min-width:900px){.gal-grid{grid-template-columns:repeat(4,1fr)}.gal-grid .g-tall{grid-row:span 2}}
+    .g-item{position:relative;overflow:hidden;border-radius:2px;aspect-ratio:1;background:var(--surface);cursor:pointer}
+    .g-item.g-tall{aspect-ratio:1/2}@media(max-width:899px){.g-item.g-tall{aspect-ratio:1}}
+    .g-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.4,0,.2,1);filter:grayscale(18%)}
+    .g-item:hover img{transform:scale(1.07);filter:grayscale(0%)}
+    .g-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 55%);opacity:0;transition:opacity .3s;display:flex;align-items:flex-end;padding:1rem;gap:.5rem}
+    .g-item:hover .g-ov{opacity:1}
+    .g-lbl{font-family:var(--fd);font-size:.5rem;letter-spacing:.18em;text-transform:uppercase}
+    .gm .g-lbl{color:var(--gold-lt)}.gf .g-lbl{color:var(--rose-lt)}
+    .g-chip{font-family:var(--fd);font-size:.38rem;letter-spacing:.12em;text-transform:uppercase;padding:.14rem .48rem;border-radius:2px}
+    .gm .g-chip{background:var(--gold);color:#000}.gf .g-chip{background:var(--rose);color:#fff}
+
+    /* ABOUT */
+    .about{padding:7rem 0}
+    .about-grid{display:grid;gap:5rem;grid-template-columns:1fr}
+    @media(min-width:768px){.about-grid{grid-template-columns:1fr 1fr;align-items:center}}
+    .about-imgs{position:relative}
+    .about-main{border-radius:2px;overflow:hidden;aspect-ratio:4/5;box-shadow:var(--shadow)}
+    .about-main img{width:100%;height:100%;object-fit:cover}
+    .about-accent{position:absolute;bottom:-2rem;right:-2rem;width:44%;aspect-ratio:1;border-radius:2px;overflow:hidden;border:4px solid var(--bg);box-shadow:var(--shadow)}
+    @media(max-width:500px){.about-accent{display:none}}
+    .about-accent img{width:100%;height:100%;object-fit:cover}
+    .about-badge{position:absolute;top:2rem;left:-1.5rem;padding:1.2rem 1.6rem;box-shadow:var(--shadow);text-align:center;border-radius:2px;background:linear-gradient(135deg,var(--gold-dk),var(--gold) 40%,var(--rose) 70%,var(--rose-lt))}
+    @media(max-width:500px){.about-badge{left:1rem}}
+    .about-badge-sym{font-family:var(--fd);font-size:1.6rem;color:#000;line-height:1}
+    .about-badge-lbl{font-family:var(--fd);font-size:.42rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(0,0,0,.6);margin-top:.3rem}
+    .about-pts{display:flex;flex-direction:column;gap:1rem;margin-top:2rem}
+    .about-pt{display:flex;gap:1.1rem;padding:1.2rem;border:1px solid var(--border);border-radius:2px;background:var(--surface);transition:border-color .25s;align-items:flex-start}
+    .about-pt:hover{border-color:rgba(201,168,76,.22)}
+    .pt-icon{flex-shrink:0;width:36px;height:36px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+    .pt-g .pt-icon{background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.18)}
+    .pt-r .pt-icon{background:rgba(196,145,122,.07);border:1px solid rgba(196,145,122,.18)}
+    .about-pt h4{font-family:var(--fd);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text);margin-bottom:.25rem}
+    .about-pt p{font-size:.78rem;color:var(--muted);line-height:1.65;font-weight:300}
+
+    /* TESTIMONIALS */
+    .testis{padding:7rem 0;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .test-hd{text-align:center;margin-bottom:4rem}
+    .test-hd .divider{margin-inline:auto}
+    .test-hd .sec-sub{margin-inline:auto}
+    .test-grid{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:2px;overflow:hidden}
+    @media(min-width:640px){.test-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(min-width:960px){.test-grid{grid-template-columns:repeat(3,1fr)}}
+    .test-card{background:var(--bg2);padding:2.4rem;transition:background .2s;border-top:2px solid transparent}
+    .test-card:hover{background:var(--surface2)}
+    .tc-m{border-top-color:var(--gold)}.tc-f{border-top-color:var(--rose)}
+    .stars{font-size:.8rem;letter-spacing:.1em;margin-bottom:1rem}
+    .tc-m .stars{color:var(--gold)}.tc-f .stars{color:var(--rose)}
+    .test-body{font-family:var(--fs);font-size:.95rem;line-height:1.8;color:var(--text2);margin-bottom:1.5rem;font-style:italic;font-weight:300}
+    .test-author{display:flex;align-items:center;gap:.9rem}
+    .test-av{width:42px;height:42px;border-radius:50%;overflow:hidden;border:1px solid var(--border-lt)}
+    .test-av img{width:100%;height:100%;object-fit:cover}
+    .test-name{font-family:var(--fd);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text)}
+    .test-role{font-size:.7rem;color:var(--muted);margin-top:.15rem;font-weight:300}
+
+    /* BOOKING */
+    .booking{padding:7rem 0}
+    .bk-inner{display:grid;gap:5rem;grid-template-columns:1fr;align-items:start}
+    @media(min-width:768px){.bk-inner{grid-template-columns:1fr 1fr}}
+    .bk-title{font-family:var(--fd);font-size:clamp(2rem,5vw,3.8rem);line-height:.95;letter-spacing:.04em;text-transform:uppercase;margin-bottom:1rem}
+    .bk-sub{color:var(--muted);line-height:1.78;font-size:.86rem;margin-bottom:2rem;border-left:1px solid rgba(201,168,76,.25);padding-left:1rem;font-weight:300}
+    .bk-steps{display:flex;flex-direction:column;gap:1rem}
+    .bk-step{display:flex;align-items:center;gap:1.2rem;padding:1rem;border:1px solid var(--border);border-radius:2px;transition:border-color .2s}
+    .bk-step:hover{border-color:rgba(201,168,76,.22)}
+    .sn{flex-shrink:0;width:32px;height:32px;border-radius:2px;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.85rem;color:var(--gold)}
+    .st{font-size:.83rem;color:var(--muted);font-weight:300}
+    .st strong{color:var(--text);font-weight:500}
+    .bk-form-box{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:2.5rem;box-shadow:var(--shadow)}
+    .form-title{font-family:var(--fd);font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.4rem;color:var(--text)}
+    .form-sub{font-size:.75rem;color:var(--muted);margin-bottom:1.8rem;font-weight:300}
+    .fg{margin-bottom:1rem}
+    .fg label{display:block;font-family:var(--fd);font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+    .fc{width:100%;background:var(--bg);border:1px solid var(--border-lt);border-radius:2px;padding:.78rem 1rem;color:var(--text);font-size:.85rem;font-family:var(--fn);transition:border-color .2s;appearance:none;font-weight:300}
+    .fc:focus{outline:none;border-color:rgba(201,168,76,.45)}
+    .fc option{background:var(--bg)}
+    .fr{display:grid;gap:1rem;grid-template-columns:1fr 1fr}
+    @media(max-width:500px){.fr{grid-template-columns:1fr}}
+    .fsub{width:100%;padding:1rem;border-radius:2px;font-size:.76rem;margin-top:.8rem}
+
+    /* INFO */
+    .info-sec{padding:5.5rem 0;background:var(--bg2);border-top:1px solid var(--border)}
+    .info-grid{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:2px;overflow:hidden}
+    @media(min-width:768px){.info-grid{grid-template-columns:repeat(3,1fr)}}
+    .info-card{background:var(--surface);padding:2.2rem;transition:background .2s}
+    .info-card:hover{background:var(--surface2)}
+    .ic-icon{font-size:1.4rem;margin-bottom:1rem}
+    .info-card h3{font-family:var(--fd);font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:1rem;color:var(--gold)}
+    .info-card p{font-size:.84rem;color:var(--muted);line-height:1.9;font-weight:300}
+    .info-card a{color:var(--gold);transition:opacity .2s}
+    .info-card a:hover{opacity:.75}
+    .sch-rows{display:flex;flex-direction:column;gap:.5rem}
+    .sch-row{display:flex;justify-content:space-between;font-size:.8rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+    .sch-row:last-child{border-bottom:none}
+    .sch-row span:first-child{color:var(--muted);font-weight:300}
+    .sch-row span:last-child{font-family:var(--fd);font-size:.7rem;letter-spacing:.05em;font-weight:600;color:var(--text)}
+
+    /* FOOTER */
+    footer{background:#000;color:rgba(242,237,228,.5);padding:4.5rem 0 2rem;border-top:1px solid var(--border)}
+    .ft-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:3rem;padding-bottom:3rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+    .ft-crown{width:28px;margin-bottom:.5rem}
+    .ft-name{font-family:var(--fd);font-size:1.9rem;letter-spacing:.2em;background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+    .ft-sub{font-family:var(--fd);font-size:.36rem;letter-spacing:.5em;text-transform:uppercase;color:rgba(242,237,228,.2);margin-top:.4rem}
+    .ft-brand p{font-size:.78rem;color:rgba(242,237,228,.28);line-height:1.78;max-width:230px;margin-top:.9rem;font-weight:300}
+    .ft-col h4{font-family:var(--fd);font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1.1rem}
+    .ft-col ul{display:flex;flex-direction:column;gap:.6rem}
+    .ft-col li a{font-size:.78rem;color:rgba(242,237,228,.3);transition:color .2s;font-weight:300}
+    .ft-col li a:hover{color:var(--gold)}
+    .soc-row{display:flex;gap:.6rem;margin-top:.9rem}
+    .soc-btn{width:36px;height:36px;border-radius:2px;border:1px solid var(--border-lt);display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .2s}
+    .soc-btn:hover{border-color:var(--gold);color:var(--gold)}
+    .ft-bot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1rem;font-size:.7rem;color:rgba(242,237,228,.23)}
+    .ft-bot a{color:var(--gold)}
+
+    /* WA FLOAT */
+    .wa-fl{position:fixed;bottom:1.8rem;right:1.8rem;z-index:90;width:56px;height:56px;border-radius:50%;background:var(--wa);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(37,211,102,.28);transition:transform .25s;animation:waPulse 3s ease-in-out infinite}
+    .wa-fl:hover{transform:scale(1.1);animation:none}
+    .wa-fl svg{width:24px;height:24px;fill:#fff}
+    @keyframes waPulse{0%,100%{box-shadow:0 4px 24px rgba(37,211,102,.28)}50%{box-shadow:0 4px 36px rgba(37,211,102,.55)}}
+
+    /* REVEAL */
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+    .reveal.visible{opacity:1;transform:none}
+    .reveal-l{opacity:0;transform:translateX(-24px);transition:opacity .7s ease,transform .7s ease}
+    .reveal-l.visible{opacity:1;transform:none}
+    .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+
+    /* CURSOR */
+    @media(pointer:fine){
+      .cursor{width:6px;height:6px;background:var(--gold);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%)}
+      .cursor-ring{width:28px;height:28px;border:1px solid rgba(201,168,76,.3);border-radius:50%;position:fixed;pointer-events:none;z-index:9997;transform:translate(-50%,-50%);transition:all .18s ease}
+      body{cursor:none}a,button{cursor:none}
+    }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cring"></div>
+<canvas id="pc"></canvas>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ldr-crown">
+    <svg viewBox="0 0 60 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="cg" x1="0" y1="0" x2="60" y2="38" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#C9A84C"/><stop offset="50%" stop-color="#E2C87A"/><stop offset="100%" stop-color="#C4917A"/>
+        </linearGradient>
+      </defs>
+      <path d="M2 32 L2 12 L16 24 L30 2 L44 24 L58 12 L58 32 Z" stroke="url(#cg)" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+      <rect x="2" y="30" width="56" height="6" rx="1" stroke="url(#cg)" stroke-width="1.5" fill="none"/>
+      <circle cx="30" cy="2" r="2.5" fill="url(#cg)"/>
+      <circle cx="16" cy="24" r="1.8" fill="url(#cg)" opacity=".7"/>
+      <circle cx="44" cy="24" r="1.8" fill="url(#cg)" opacity=".7"/>
+      <circle cx="18" cy="33" r="1" fill="url(#cg)" opacity=".5"/>
+      <circle cx="30" cy="33" r="1" fill="url(#cg)" opacity=".5"/>
+      <circle cx="42" cy="33" r="1" fill="url(#cg)" opacity=".5"/>
+    </svg>
+  </div>
+  <div class="ldr-sub">Barbería & Salón · Ñemby</div>
+  <div class="ldr-name" data-text="TULLO">TULLO</div>
+  <div class="ldr-place">Masculino & Femenino</div>
+  <div class="ldr-track"><div class="ldr-fill"></div></div>
+</div>
+
+<!-- NAV -->
+<nav class="navbar" id="navbar">
+  <div class="container nav-inner">
+    <a href="#inicio" class="nav-logo">
+      <svg viewBox="0 0 60 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="ng" x1="0" y1="0" x2="60" y2="38" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C9A84C"/><stop offset="100%" stop-color="#C4917A"/></linearGradient></defs>
+        <path d="M2 32 L2 12 L16 24 L30 2 L44 24 L58 12 L58 32 Z" stroke="url(#ng)" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+        <rect x="2" y="30" width="56" height="6" rx="1" stroke="url(#ng)" stroke-width="1.5" fill="none"/>
+        <circle cx="30" cy="2" r="2.5" fill="url(#ng)"/>
+        <circle cx="16" cy="24" r="1.8" fill="url(#ng)" opacity=".7"/>
+        <circle cx="44" cy="24" r="1.8" fill="url(#ng)" opacity=".7"/>
+      </svg>
+      <span class="nav-logo-name">TULLO</span>
+      <span class="nav-logo-sub">Barbería & Salón · Ñemby</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#galeria">Galería</a></li>
+      <li><a href="#nosotros">Nosotros</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <a href="https://wa.me/595XXXXXXXXX?text=Hola!%20Quiero%20reservar%20en%20Barbería%20Tullo." target="_blank" rel="noopener" class="btn btn-gold nav-cta">Reservar turno</a>
+    <button class="hamburger" id="hbg" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mmenu">
+  <a href="#servicios" class="ml">Servicios</a>
+  <a href="#galeria" class="ml">Galería</a>
+  <a href="#nosotros" class="ml">Nosotros</a>
+  <a href="#contacto" class="ml">Contacto</a>
+  <a href="https://wa.me/595XXXXXXXXX" class="btn btn-wa" target="_blank">Reservar ahora</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+
+  <!-- Mobile top logo -->
+  <div class="hero-m-logo">
+    <svg viewBox="0 0 60 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="mlg" x1="0" y1="0" x2="60" y2="38" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C9A84C"/><stop offset="100%" stop-color="#C4917A"/></linearGradient></defs>
+      <path d="M2 32 L2 12 L16 24 L30 2 L44 24 L58 12 L58 32 Z" stroke="url(#mlg)" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+      <rect x="2" y="30" width="56" height="6" rx="1" stroke="url(#mlg)" stroke-width="1.5" fill="none"/>
+      <circle cx="30" cy="2" r="2.5" fill="url(#mlg)"/><circle cx="16" cy="24" r="1.8" fill="url(#mlg)" opacity=".7"/><circle cx="44" cy="24" r="1.8" fill="url(#mlg)" opacity=".7"/>
+    </svg>
+    <div class="hero-m-logo-name">TULLO</div>
+  </div>
+
+  <!-- Left: Masculine -->
+  <div class="hero-half hero-half--m">
+    <div class="hero-grain"></div>
+    <div class="hero-label">♔ Para Ellos</div>
+    <h1 class="hero-title">
+      Cortes que<br /><span class="g">definen</span><br />tu estilo.
+    </h1>
+    <p class="hero-desc">Fade, clásico, barba artesanal. Técnica de precisión para el hombre que no acepta menos que el mejor.</p>
+    <div class="hero-actions">
+      <a href="https://wa.me/595XXXXXXXXX?text=Hola!%20Quiero%20reservar%20un%20servicio%20masculino%20en%20Tullo." target="_blank" rel="noopener" class="btn btn-gold">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Reservar
+      </a>
+      <a href="#servicios" class="btn btn-og">Ver servicios →</a>
+    </div>
+  </div>
+
+  <!-- Center logo (desktop) -->
+  <div class="hero-divider"></div>
+  <div class="hero-center">
+    <svg viewBox="0 0 60 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="hcg" x1="0" y1="0" x2="60" y2="38" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C9A84C"/><stop offset="50%" stop-color="#E2C87A"/><stop offset="100%" stop-color="#C4917A"/></linearGradient></defs>
+      <path d="M2 32 L2 12 L16 24 L30 2 L44 24 L58 12 L58 32 Z" stroke="url(#hcg)" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+      <rect x="2" y="30" width="56" height="6" rx="1" stroke="url(#hcg)" stroke-width="1.5" fill="none"/>
+      <circle cx="30" cy="2" r="2.5" fill="url(#hcg)"/><circle cx="16" cy="24" r="1.8" fill="url(#hcg)" opacity=".7"/><circle cx="44" cy="24" r="1.8" fill="url(#hcg)" opacity=".7"/>
+      <circle cx="18" cy="33" r="1" fill="url(#hcg)" opacity=".5"/><circle cx="30" cy="33" r="1" fill="url(#hcg)" opacity=".5"/><circle cx="42" cy="33" r="1" fill="url(#hcg)" opacity=".5"/>
+    </svg>
+    <div class="hero-center-name">TULLO</div>
+  </div>
+
+  <!-- Right: Feminine -->
+  <div class="hero-half hero-half--f">
+    <div class="hero-grain"></div>
+    <div class="hero-label">♕ Para Ellas</div>
+    <h1 class="hero-title">
+      Tu belleza,<br /><span class="r">redefinida</span><br />con arte.
+    </h1>
+    <p class="hero-desc">Balayage, keratina, corte femenino. Un espacio donde cada detalle importa y vos brillás.</p>
+    <div class="hero-actions">
+      <a href="https://wa.me/595XXXXXXXXX?text=Hola!%20Quiero%20reservar%20un%20servicio%20femenino%20en%20Tullo." target="_blank" rel="noopener" class="btn btn-rose">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Reservar
+      </a>
+      <a href="#servicios" class="btn btn-or">Ver servicios →</a>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="mq-wrap" aria-hidden="true">
+  <div class="mq-track">
+    <span class="mq-item">Corte Clásico</span><span class="mq-item">Fade & Degradé</span><span class="mq-item">Barba Artesanal</span><span class="mq-item">Balayage</span><span class="mq-item">Keratina</span><span class="mq-item">Coloración</span><span class="mq-item">Brushing Premium</span><span class="mq-item">Tratamiento Capilar</span>
+    <span class="mq-item">Corte Clásico</span><span class="mq-item">Fade & Degradé</span><span class="mq-item">Barba Artesanal</span><span class="mq-item">Balayage</span><span class="mq-item">Keratina</span><span class="mq-item">Coloración</span><span class="mq-item">Brushing Premium</span><span class="mq-item">Tratamiento Capilar</span>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="container stats-inner">
+    <div class="stat sg"><div class="stat-num">★ 5.0</div><div class="stat-label">Reseñas</div></div>
+    <div class="stat sr"><div class="stat-num">♔ ♕</div><div class="stat-label">Ellos & Ellas</div></div>
+    <div class="stat sg"><div class="stat-num">100%</div><div class="stat-label">Premium</div></div>
+    <div class="stat sr"><div class="stat-num">Ñemby</div><div class="stat-label">Paraguay</div></div>
+  </div>
+</div>
+
+<!-- SERVICIOS -->
+<section class="services" id="servicios">
+  <div class="container">
+    <div class="services-hd reveal">
+      <span class="tag">Servicios</span>
+      <h2 class="sec-title">Arte en cada <em>sesión</em></h2>
+      <div class="divider" style="margin-inline:auto"></div>
+      <p class="sec-sub" style="margin-inline:auto;text-align:center">Un espacio donde hombres y mujeres reciben el mismo nivel de excelencia. Elegí lo que necesitás.</p>
+    </div>
+    <div class="dual-split reveal">
+
+      <!-- PARA ELLOS -->
+      <div class="dual-col dm">
+        <div class="dcol-hd">
+          <div class="dcol-icon">♔</div>
+          <div>
+            <h3>Para Ellos</h3>
+            <p>Cortes masculinos · Barbería premium</p>
+          </div>
+        </div>
+        <div class="svc-item">
+          <div class="svc-n">01</div>
+          <div class="svc-b">
+            <div class="svc-name">Corte Clásico</div>
+            <div class="svc-desc">Tijera y máquina. Terminación impecable adaptada a tu estilo y tipo de cabello.</div>
+          </div>
+        </div>
+        <div class="svc-item">
+          <div class="svc-n">02</div>
+          <div class="svc-b">
+            <div class="svc-name">Fade & Degradé</div>
+            <div class="svc-desc">Skin fade, low, mid o high fade. Líneas limpias y transiciones de precisión.</div>
+          </div>
+          <div class="svc-badge">Popular</div>
+        </div>
+        <div class="svc-item">
+          <div class="svc-n">03</div>
+          <div class="svc-b">
+            <div class="svc-name">Barba Artesanal</div>
+            <div class="svc-desc">Perfilado, diseño y acabado de navaja. Toalla caliente y aceites premium incluidos.</div>
+          </div>
+        </div>
+        <div class="svc-item">
+          <div class="svc-n">04</div>
+          <div class="svc-b">
+            <div class="svc-name">Combo Élite</div>
+            <div class="svc-desc">Corte + barba artesanal. Salís completamente renovado en una sola visita.</div>
+          </div>
+          <div class="svc-badge">★ Top</div>
+        </div>
+        <div class="svc-item">
+          <div class="svc-n">05</div>
+          <div class="svc-b">
+            <div class="svc-name">Coloración Masculina</div>
+            <div class="svc-desc">Pigmentos de color, matices o grises. Natural o atrevido, lo que buscás.</div>
+          </div>
+        </div>
+        <div class="svc-item">
+          <div class="svc-n">06</div>
+          <div class="svc-b">
+            <div class="svc-name">Tratamiento Capilar</div>
+            <div class="svc-desc">Hidratación y nutrición profunda. Para un cabello sano, brillante y fuerte.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PARA ELLAS -->
+      <div class="dual-col df">
+        <div class="dcol-hd">
+          <div class="dcol-icon">♕</div>
+          <div>
+            <h3>Para Ellas</h3>
+            <p>Salón femenino · Técnica de vanguardia</p>
+          </div>
+        </div>
+        <div class="svc-item">
+          <div class="svc-n">01</div>
+          <div class="svc-b">
+            <div class="svc-name">Corte Femenino</div>
+            <div class="svc-desc">Personalizado según tu tipo de rostro y cabello. Capas, flecos, estructurado o libre.</div>
+          </div>
+        </div>
+        <div class="svc-item">
+          <div class="svc-n">02</div>
+          <div class="svc-b">
+            <div class="svc-name">Balayage & Mechas</div>
+            <div class="svc-desc">Técnica artesanal de iluminación. Degradé natural y luminoso adaptado a tu tono de piel.</div>
+          </div>
+          <div class="svc-badge">Tendencia</div>
+        </div>
+        <div class="svc-item">
+          <div class="svc-n">03</div>
+          <div class="svc-b">
+            <div class="svc-name">Coloración</div>
+            <div class="svc-desc">Color completo, raíces o fantasía. Pigmentos premium con tecnología que cuida cada hebra.</div>
+          </div>
+        </div>
+        <div class="svc-item">
+          <div class="svc-n">04</div>
+          <div class="svc-b">
+            <div class="svc-name">Keratina</div>
+            <div class="svc-desc">Alisado progresivo profesional. Sin frizz, sin encrespamiento. Hasta 3 meses de resultado.</div>
+          </div>
+          <div class="svc-badge">★ Top</div>
+        </div>
+        <div class="svc-item">
+          <div class="svc-n">05</div>
+          <div class="svc-b">
+            <div class="svc-name">Brushing Premium</div>
+            <div class="svc-desc">Voluminizador o liso espejo. Duradero, brillante, de revista.</div>
+          </div>
+        </div>
+        <div class="svc-item">
+          <div class="svc-n">06</div>
+          <div class="svc-b">
+            <div class="svc-name">Tratamiento Capilar</div>
+            <div class="svc-desc">Hidratación profunda, reconstrucción y nutrición con fórmulas profesionales de primera línea.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <div class="container cta-inner reveal">
+    <div class="cta-text">Tu turno en Ñemby,<br /><strong>reservá hoy</strong> <em>mismo.</em></div>
+    <div class="cta-acts">
+      <a href="https://wa.me/595XXXXXXXXX?text=Hola!%20Quiero%20reservar%20en%20Barbería%20Tullo." target="_blank" rel="noopener" class="btn btn-gold">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Escribinos por WhatsApp
+      </a>
+      <a href="#reservar" class="btn btn-ghost">Formulario →</a>
+    </div>
+  </div>
+</div>
+
+<!-- GALERÍA -->
+<section class="gallery" id="galeria">
+  <div class="container">
+    <div class="gal-hd reveal">
+      <div>
+        <span class="tag">Galería</span>
+        <h2 class="sec-title">Nuestro <em>trabajo</em></h2>
+        <div class="divider"></div>
+      </div>
+      <a href="https://instagram.com/" target="_blank" rel="noopener" class="btn btn-ghost">Ver en Instagram →</a>
+    </div>
+    <div class="gal-grid reveal">
+      <div class="g-item gm g-tall">
+        <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600&q=80" alt="Corte masculino" loading="lazy" />
+        <div class="g-ov"><span class="g-lbl">Fade Élite</span><span class="g-chip">Ellos</span></div>
+      </div>
+      <div class="g-item gf">
+        <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=500&q=80" alt="Balayage" loading="lazy" />
+        <div class="g-ov"><span class="g-lbl">Balayage</span><span class="g-chip">Ellas</span></div>
+      </div>
+      <div class="g-item gm">
+        <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=500&q=80" alt="Barba artesanal" loading="lazy" />
+        <div class="g-ov"><span class="g-lbl">Barba</span><span class="g-chip">Ellos</span></div>
+      </div>
+      <div class="g-item gf">
+        <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=500&q=80" alt="Corte femenino" loading="lazy" />
+        <div class="g-ov"><span class="g-lbl">Corte Femenino</span><span class="g-chip">Ellas</span></div>
+      </div>
+      <div class="g-item gm">
+        <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=500&q=80" alt="Degradé" loading="lazy" />
+        <div class="g-ov"><span class="g-lbl">Degradé</span><span class="g-chip">Ellos</span></div>
+      </div>
+      <div class="g-item gf">
+        <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=500&q=80" alt="Coloración" loading="lazy" />
+        <div class="g-ov"><span class="g-lbl">Coloración</span><span class="g-chip">Ellas</span></div>
+      </div>
+      <div class="g-item gf">
+        <img src="https://images.unsplash.com/photo-1595163153849-e3f36fe8bbcc?w=500&q=80" alt="Brushing" loading="lazy" />
+        <div class="g-ov"><span class="g-lbl">Brushing</span><span class="g-chip">Ellas</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOSOTROS -->
+<section class="about" id="nosotros">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-imgs reveal-l">
+        <div class="about-main">
+          <img src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=700&q=80" alt="Tullo Barbería" />
+        </div>
+        <div class="about-accent">
+          <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400&q=80" alt="Salón Tullo" />
+        </div>
+        <div class="about-badge">
+          <div class="about-badge-sym">✦</div>
+          <div class="about-badge-lbl">Ñemby · PY</div>
+        </div>
+      </div>
+      <div class="reveal d1">
+        <span class="tag">Nosotros</span>
+        <h2 class="sec-title">Donde el estilo<br />se <em>convierte en arte.</em></h2>
+        <div class="divider"></div>
+        <p class="sec-sub">Barbería Tullo nació de la pasión por transformar. Combinamos técnica de vanguardia con un ambiente premium en el corazón de Ñemby, para que cada visita — ya sea de él o de ella — sea una experiencia única.</p>
+        <div class="about-pts">
+          <div class="about-pt pt-g">
+            <div class="pt-icon">✂️</div>
+            <div>
+              <h4>Técnica de precisión</h4>
+              <p>Fade, tijera, coloración — dominamos todas las disciplinas con acabado impecable para hombres y mujeres.</p>
+            </div>
+          </div>
+          <div class="about-pt pt-r">
+            <div class="pt-icon">👑</div>
+            <div>
+              <h4>El logo que lo dice todo</h4>
+              <p>La corona sobre TULLO representa excelencia, distinción y el compromiso de elevar tu imagen cada vez.</p>
+            </div>
+          </div>
+          <div class="about-pt pt-g">
+            <div class="pt-icon">🏆</div>
+            <div>
+              <h4>Productos premium</h4>
+              <p>Trabajamos exclusivamente con marcas profesionales de primera línea para garantizar el mejor resultado.</p>
+            </div>
+          </div>
+          <div class="about-pt pt-r">
+            <div class="pt-icon">📱</div>
+            <div>
+              <h4>Reservas al instante</h4>
+              <p>Un mensaje en WhatsApp y tu turno queda confirmado. Sin filas, sin esperas, sin complicaciones.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section class="testis">
+  <div class="container">
+    <div class="test-hd reveal">
+      <span class="tag">Reseñas</span>
+      <h2 class="sec-title">Lo que dicen <em>ellos</em> y <em class="r">ellas</em></h2>
+      <div class="divider"></div>
+      <p class="sec-sub">Clientes reales de Ñemby que eligen Tullo una y otra vez.</p>
+    </div>
+    <div class="test-grid">
+      <div class="test-card tc-m reveal">
+        <div class="stars">★★★★★</div>
+        <p class="test-body">"El mejor fade que me hicieron en mi vida. Vine de pasada y ahora soy cliente fijo. El ambiente es premium y los profes saben lo que hacen."</p>
+        <div class="test-author">
+          <div class="test-av"><img src="https://i.pravatar.cc/80?img=12" alt="Rodrigo" /></div>
+          <div><div class="test-name">Rodrigo M.</div><div class="test-role">Cliente frecuente · Ñemby</div></div>
+        </div>
+      </div>
+      <div class="test-card tc-f reveal d1">
+        <div class="stars">★★★★★</div>
+        <p class="test-body">"El balayage quedó increíble. Salí sintiéndome otra persona. El trato es de lujo y el resultado superó todo lo que esperaba."</p>
+        <div class="test-author">
+          <div class="test-av"><img src="https://i.pravatar.cc/80?img=47" alt="Valentina" /></div>
+          <div><div class="test-name">Valentina R.</div><div class="test-role">Cliente frecuente · Ñemby</div></div>
+        </div>
+      </div>
+      <div class="test-card tc-m reveal d2">
+        <div class="stars">★★★★★</div>
+        <p class="test-body">"Vine por el corte con barba y quedé encantado. Atención de primer nivel, el lugar es hermoso y el precio justo. 100% recomendado."</p>
+        <div class="test-author">
+          <div class="test-av"><img src="https://i.pravatar.cc/80?img=15" alt="Diego" /></div>
+          <div><div class="test-name">Diego A.</div><div class="test-role">Cliente frecuente · Ñemby</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVA -->
+<section class="booking" id="reservar">
+  <div class="container">
+    <div class="bk-inner">
+      <div class="reveal">
+        <span class="tag">Reservas</span>
+        <h2 class="bk-title">TU TURNO,<br />TU ESTILO.</h2>
+        <p class="bk-sub">Escribinos directamente por WhatsApp y confirmamos tu turno en minutos. También podés dejar tu consulta por el formulario.</p>
+        <div class="bk-steps">
+          <div class="bk-step"><div class="sn">1</div><div class="st"><strong>Elegí el servicio</strong> que necesitás</div></div>
+          <div class="bk-step"><div class="sn">2</div><div class="st"><strong>Indicá día y horario</strong> de preferencia</div></div>
+          <div class="bk-step"><div class="sn">3</div><div class="st"><strong>Confirmamos</strong> tu turno al instante</div></div>
+        </div>
+        <a href="https://wa.me/595XXXXXXXXX?text=Hola!%20Quiero%20reservar%20en%20Barbería%20Tullo." target="_blank" rel="noopener" class="btn btn-wa" style="margin-top:2rem">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Escribinos ahora
+        </a>
+      </div>
+      <div class="bk-form-box reveal d1">
+        <div class="form-title">Dejá tu consulta</div>
+        <div class="form-sub">Te respondemos en minutos por WhatsApp</div>
+        <form id="bkForm" onsubmit="sendWA(event)">
+          <div class="fr">
+            <div class="fg"><label for="nom">Nombre</label><input type="text" id="nom" class="fc" placeholder="Tu nombre" required /></div>
+            <div class="fg"><label for="tel">Celular</label><input type="tel" id="tel" class="fc" placeholder="0981 ..." required /></div>
+          </div>
+          <div class="fg">
+            <label for="genero">Servicio para</label>
+            <select id="genero" class="fc" onchange="updateServices()">
+              <option value="">Seleccioná...</option>
+              <option value="m">Masculino (Ellos)</option>
+              <option value="f">Femenino (Ellas)</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label for="svc">Servicio</label>
+            <select id="svc" class="fc">
+              <option value="">Elegí un servicio...</option>
+              <option>Corte Clásico</option><option>Fade & Degradé</option><option>Barba Artesanal</option>
+              <option>Combo Élite</option><option>Coloración Masculina</option><option>Tratamiento Capilar</option>
+              <option>Corte Femenino</option><option>Balayage & Mechas</option><option>Coloración</option>
+              <option>Keratina</option><option>Brushing Premium</option>
+            </select>
+          </div>
+          <div class="fr">
+            <div class="fg"><label for="fch">Fecha</label><input type="date" id="fch" class="fc" /></div>
+            <div class="fg">
+              <label for="hr">Horario</label>
+              <select id="hr" class="fc">
+                <option>Mañana (9–12h)</option><option>Tarde (12–17h)</option><option>Noche (17–20h)</option>
+              </select>
+            </div>
+          </div>
+          <div class="fg"><label for="nota">Nota adicional</label><input type="text" id="nota" class="fc" placeholder="Algún detalle extra..." /></div>
+          <button type="submit" class="btn btn-gold fsub">Enviar por WhatsApp →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INFO / CONTACTO -->
+<section class="info-sec" id="contacto">
+  <div class="container">
+    <div class="info-grid">
+      <div class="info-card reveal">
+        <div class="ic-icon">🕐</div>
+        <h3>Horarios</h3>
+        <div class="sch-rows">
+          <div class="sch-row"><span>Lunes – Viernes</span><span>9:00 – 20:00</span></div>
+          <div class="sch-row"><span>Sábados</span><span>9:00 – 18:00</span></div>
+          <div class="sch-row"><span>Domingos</span><span>Bajo reserva</span></div>
+        </div>
+      </div>
+      <div class="info-card reveal d1">
+        <div class="ic-icon">📍</div>
+        <h3>Dónde estamos</h3>
+        <p>[Dirección a completar]<br />Ñemby, Paraguay<br /><br /><a href="https://maps.google.com" target="_blank" rel="noopener">Ver en Google Maps →</a></p>
+      </div>
+      <div class="info-card reveal d2">
+        <div class="ic-icon">📲</div>
+        <h3>Contacto</h3>
+        <p>
+          WhatsApp: <a href="https://wa.me/595XXXXXXXXX">+595 XXX XXX XXX</a><br /><br />
+          Instagram: <a href="https://instagram.com/" target="_blank" rel="noopener">@tullo.barberia</a>
+        </p>
+        <div class="soc-row" style="margin-top:1.2rem">
+          <a href="https://instagram.com/" target="_blank" rel="noopener" class="soc-btn" aria-label="Instagram">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+          <a href="https://wa.me/595XXXXXXXXX" target="_blank" rel="noopener" class="soc-btn" aria-label="WhatsApp">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <svg class="ft-crown" viewBox="0 0 60 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="fg2" x1="0" y1="0" x2="60" y2="38" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C9A84C"/><stop offset="100%" stop-color="#C4917A"/></linearGradient></defs>
+          <path d="M2 32 L2 12 L16 24 L30 2 L44 24 L58 12 L58 32 Z" stroke="url(#fg2)" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+          <rect x="2" y="30" width="56" height="6" rx="1" stroke="url(#fg2)" stroke-width="1.5" fill="none"/>
+          <circle cx="30" cy="2" r="2.5" fill="url(#fg2)"/>
+        </svg>
+        <div class="ft-name">TULLO</div>
+        <div class="ft-sub">Barbería & Salón · Ñemby, Paraguay</div>
+        <p>Un espacio premium donde hombres y mujeres reciben el mejor servicio en el corazón de Ñemby.</p>
+      </div>
+      <div class="ft-col">
+        <h4>Servicios</h4>
+        <ul>
+          <li><a href="#servicios">Fade & Degradé</a></li>
+          <li><a href="#servicios">Barba Artesanal</a></li>
+          <li><a href="#servicios">Balayage & Mechas</a></li>
+          <li><a href="#servicios">Keratina</a></li>
+          <li><a href="#servicios">Coloración</a></li>
+        </ul>
+      </div>
+      <div class="ft-col">
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#galeria">Galería</a></li>
+          <li><a href="#nosotros">Nosotros</a></li>
+          <li><a href="#reservar">Reservas</a></li>
+        </ul>
+      </div>
+      <div class="ft-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="https://wa.me/595XXXXXXXXX">WhatsApp</a></li>
+          <li><a href="https://instagram.com/">Instagram</a></li>
+          <li><a href="#contacto">Ñemby, Paraguay</a></li>
+        </ul>
+        <div class="soc-row">
+          <a href="https://instagram.com/" target="_blank" rel="noopener" class="soc-btn" aria-label="Instagram">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+          <a href="https://wa.me/595XXXXXXXXX" target="_blank" rel="noopener" class="soc-btn" aria-label="WhatsApp">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="ft-bot">
+      <span>© 2026 Barbería Tullo · Ñemby, Paraguay. Todos los derechos reservados.</span>
+      <span>Sitio por <a href="https://indextechnologies.de" target="_blank" rel="noopener">Index Technologies</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- WA FLOAT -->
+<a href="https://wa.me/595XXXXXXXXX?text=Hola!%20Quiero%20reservar%20en%20Barbería%20Tullo." target="_blank" rel="noopener" class="wa-fl" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+// LOADER
+setTimeout(() => { document.getElementById('loader').classList.add('hide'); }, 2600);
+
+// CURSOR
+const cur = document.getElementById('cursor');
+const cr = document.getElementById('cring');
+if (cur) {
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top = e.clientY + 'px';
+    cr.style.left = e.clientX + 'px';
+    cr.style.top = e.clientY + 'px';
+  });
+}
+
+// NAVBAR SCROLL
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 40); });
+
+// HAMBURGER
+const hbg = document.getElementById('hbg');
+const mm = document.getElementById('mmenu');
+hbg.addEventListener('click', () => { hbg.classList.toggle('open'); mm.classList.toggle('open'); });
+mm.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { hbg.classList.remove('open'); mm.classList.remove('open'); }));
+
+// SCROLL REVEAL
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal, .reveal-l').forEach(el => ro.observe(el));
+
+// PARTICLES
+(function() {
+  const canvas = document.getElementById('pc');
+  const ctx = canvas.getContext('2d');
+  let W, H, pts = [];
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  class P {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = Math.random() * W; this.y = Math.random() * H;
+      this.vy = -(Math.random() * .3 + .08); this.vx = (Math.random() - .5) * .15;
+      this.r = Math.random() * 1.4 + .2; this.life = 0; this.max = Math.random() * 180 + 80;
+      this.gold = Math.random() > .5;
+    }
+    tick() { this.x += this.vx; this.y += this.vy; this.life++; if (this.life >= this.max) this.reset(); }
+    draw() {
+      const a = Math.sin((this.life / this.max) * Math.PI) * .3;
+      ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, 6.28);
+      ctx.fillStyle = this.gold ? `rgba(201,168,76,${a})` : `rgba(196,145,122,${a})`;
+      ctx.fill();
+    }
+  }
+  for (let i = 0; i < 55; i++) pts.push(new P());
+  (function loop() { ctx.clearRect(0,0,W,H); pts.forEach(p => { p.tick(); p.draw(); }); requestAnimationFrame(loop); })();
+})();
+
+// WA FORM
+function sendWA(e) {
+  e.preventDefault();
+  const nom = document.getElementById('nom').value;
+  const tel = document.getElementById('tel').value;
+  const genero = document.getElementById('genero');
+  const genTxt = genero.options[genero.selectedIndex].text || '';
+  const svc = document.getElementById('svc');
+  const svcTxt = svc.options[svc.selectedIndex].text || '';
+  const fch = document.getElementById('fch').value;
+  const hr = document.getElementById('hr');
+  const hrTxt = hr.options[hr.selectedIndex].text;
+  const nota = document.getElementById('nota').value;
+  let msg = `Hola! Quiero reservar en Barbería Tullo.\n\n`;
+  msg += `Nombre: ${nom}\nCelular: ${tel}\nServicio: ${svcTxt} (${genTxt})\n`;
+  if (fch) msg += `Fecha: ${fch}\n`;
+  msg += `Horario preferido: ${hrTxt}`;
+  if (nota) msg += `\nNota: ${nota}`;
+  window.open(`https://wa.me/595XXXXXXXXX?text=${encodeURIComponent(msg)}`, '_blank');
+}
+</script>
+</body>
+</html>
